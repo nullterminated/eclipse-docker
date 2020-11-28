@@ -14,14 +14,15 @@
 #Then in xfce launcher,
 #bash -i -c /home/alarm/eclipse/run.sh
 
-FROM fedora:32
-RUN dnf update -y; \
-    dnf module enable -y eclipse:latest;
-RUN dnf install -y eclipse-jdt eclipse-linuxtools eclipse-linuxtools-docker eclipse-dtp eclipse-webtools-sourceediting eclipse-egit-github eclipse-findbugs-contrib eclipse-mylyn eclipse-mylyn-context-* eclipse-mylyn-tasks-* eclipse-mylyn-builds jacoco java-latest-openjdk java-latest-openjdk-javadoc java-latest-openjdk-src java-latest-openjdk-jmods dejavu-sans-fonts dejavu-sans-mono-fonts dejavu-serif-fonts chromium chromedriver binutils nodejs;
+FROM fedora:33
+RUN dnf update -y;
+RUN dnf install -y eclipse-jdt eclipse-egit eclipse-cdt-terminal eclipse-mpc eclipse-webtools-sourceediting eclipse-findbugs-contrib jacoco java-latest-openjdk java-latest-openjdk-javadoc java-latest-openjdk-src java-latest-openjdk-jmods dejavu-sans-fonts dejavu-sans-mono-fonts dejavu-serif-fonts chromium chromedriver binutils nodejs yarnpkg;
 RUN sed -i -e 's/-Xmx1024m/-Xmx2048m/g' /usr/lib/eclipse/eclipse.ini; \
-    useradd -ms /bin/bash armclipse;
-RUN alternatives --set java java-latest-openjdk.aarch64;
+    useradd -ms /bin/bash armclipse; \
+    alternatives --set java java-latest-openjdk.aarch64;
 USER armclipse
-RUN /usr/bin/eclipse -noSplash -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/releases/2020-03,https://dl.bintray.com/de-jcup/basheditor -installIUs org.eclipse.m2e.feature.feature.group,org.eclipse.eclemma.feature.feature.group,org.eclipse.wildwebdeveloper.feature.feature.group,de.jcup.basheditor.feature.group; \
+RUN curl -o /home/armclipse/findsecbugs-plugin-1.11.0.jar -L https://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.11.0/findsecbugs-plugin-1.11.0.jar;
+RUN /usr/bin/eclipse -noSplash -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/releases/2020-06,https://dl.bintray.com/de-jcup/basheditor -installIUs de.jcup.basheditor.feature.group,org.eclipse.mylyn.ide_feature.feature.group,org.eclipse.mylyn.java_feature.feature.group,org.eclipse.mylyn.context_feature.feature.group,org.eclipse.mylyn.bugzilla_feature.feature.group,org.eclipse.mylyn.wikitext_feature.feature.group,org.eclipse.mylyn.git.feature.group,org.eclipse.mylyn_feature.feature.group,org.eclipse.m2e.feature.feature.group,org.eclipse.eclemma.feature.feature.group,org.eclipse.wildwebdeveloper.feature.feature.group; \
     /usr/bin/eclipse -initialize;
-RUN curl -o /home/armclipse/findsecbugs-plugin-1.10.1.jar -L https://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.10.1/findsecbugs-plugin-1.10.1.jar
+
+
