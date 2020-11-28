@@ -1,6 +1,6 @@
 # Build with
 # docker build -t armclipse:`date +%Y-%m-%d` .
-# Installs Eclipse 4.10, some plugins, Java 8 & 11
+# Installs Eclipse, some plugins, and latest Java
 # run with something like
 # (Assumes you have the proper directories in your home folder)
 #!/bin/sh
@@ -14,9 +14,10 @@
 #Then in xfce launcher,
 #bash -i -c /home/alarm/eclipse/run.sh
 
-FROM fedora:29
+FROM fedora:31
 RUN dnf update -y; \
-    dnf install -y eclipse eclipse-eclemma eclipse-findbugs eclipse-findbugs-contrib eclipse-egit-github eclipse-egit-mylyn eclipse-mylyn-context-java eclipse-mylyn-context-pde eclipse-mylyn-tasks-web eclipse-mylyn-versions eclipse-mylyn-versions-git eclipse-mylyn-builds eclipse-mylyn-builds-hudson eclipse-m2e-egit eclipse-m2e-maven-dependency-plugin eclipse-m2e-mavenarchiver eclipse-m2e-sourcelookup eclipse-m2e-buildhelper eclipse-m2e-core-javadoc eclipse-m2e-workspace-javadoc eclipse-dltk-sh java-11-openjdk java-11-openjdk-javadoc java-11-openjdk-src java-11-openjdk-jmods dejavu-sans-fonts dejavu-sans-mono-fonts dejavu-serif-fonts; \
+    dnf module enable -y eclipse:latest; \
+    dnf install -y eclipse eclipse-pydev eclipse-pydev-mylyn eclipse-eclemma eclipse-findbugs eclipse-findbugs-contrib eclipse-egit-github eclipse-egit-mylyn eclipse-mylyn-context-java eclipse-mylyn-context-pde eclipse-mylyn-tasks-web eclipse-mylyn-versions eclipse-mylyn-versions-git eclipse-mylyn-builds eclipse-mylyn-builds-hudson eclipse-m2e-egit eclipse-m2e-maven-dependency-plugin eclipse-m2e-mavenarchiver eclipse-m2e-buildhelper eclipse-m2e-core-javadoc eclipse-m2e-workspace-javadoc eclipse-dltk-sh java-latest-openjdk java-latest-openjdk-javadoc java-latest-openjdk-src java-latest-openjdk-jmods dejavu-sans-fonts dejavu-sans-mono-fonts dejavu-serif-fonts chromium chromedriver binutils; \
     sed -i -e 's/-Xmx1024m/-Xmx2048m/g' /usr/lib/eclipse/eclipse.ini; \
     useradd -ms /bin/bash armclipse;
 USER armclipse
